@@ -128,6 +128,24 @@ public class MainController {
     }
 
     @FXML
+    private void clearHistoryOnClicked() {
+        historyBox.getChildren().removeAll();
+    }
+
+    @FXML
+    private void clearOnClicked() {
+        operandsInput.appendText("");
+    }
+
+    @FXML
+    private void allClearOnClicked() {
+        firstOperand = 0;
+        operator = '0';
+        secondOperand = 0;
+        operandsInput.appendText("");
+    }
+
+    @FXML
     private void keyPeriodOnClicked() {
         operandsInput.appendText(".");
     }
