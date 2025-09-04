@@ -37,40 +37,56 @@ public class MainController {
 
     @FXML
     private void equalsOnClicked() {
-        secondOperand = Double.parseDouble(operandsInput.getText());
+        secondOperand = Double.parseDouble(operandsInput.getText() == "" ? "0" : operandsInput.getText());
         double result = performCaculations();
         operandsInput.setText(String.valueOf(result));
 
-        operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + (operator == '/' ? '÷' : operator) + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+        Label memoryLabel = new Label("");
 
-        Label memoryLabel = new Label(String.valueOf(firstOperand) + " + " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+        switch (operator) {
+            case '/':
+                operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + '÷' + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+                memoryLabel.setText(String.valueOf(firstOperand) + " " + '÷' + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+                break;
+            case '*':
+                operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + 'x' + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+                memoryLabel.setText(String.valueOf(firstOperand) + " " + 'x' + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+                break;
+            default:
+                operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + operator + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+                memoryLabel.setText(String.valueOf(firstOperand) + " " + operator + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+        }
+
         memoryLabel.setFont(Font.font("Segoe UI", 16));
         memoryLabel.setWrapText(true);
         memoryLabel.setCursor(Cursor.HAND);
 
         memoryLabel.setOnMouseClicked(event -> {
-            String[] operands = memoryLabel.getText().split(String.valueOf("\\" + (operator == '/' ? '÷' : operator)));
+            String[] tokens = memoryLabel.getText().split(" ");
 
-            firstOperand = Double.parseDouble(operands[0]);
-            secondOperand = Double.parseDouble(operands[1].split("=")[0]);
+            firstOperand = Double.parseDouble(tokens[0]);
+            secondOperand = Double.parseDouble(tokens[2]);
 
-            switch (memoryLabel.getText()) {
-                case "+":
-                    operator = '+';
-                    break;
-                case "-":
-                    operator = '-';
-                    break;
-                case "*":
-                    operator = '*';
-                    break;
-                case "/":
-                    operator = '/';
-                    break;
+            switch (tokens[1].charAt(0)) {
+                case '÷' -> operator = '/';
+                case 'x' -> operator = '*';
+                default -> operator = tokens[1].charAt(0);
             }
 
-            operandsInput.setText(String.valueOf(result));
-            operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + (operator == '/' ? '÷' : operator) + " " + String.valueOf(secondOperand) + " = " + String.valueOf(result));
+            double historyResult = performCaculations();
+
+            switch (operator) {
+                case '/':
+                    operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + '÷' + " " + String.valueOf(secondOperand) + " = " + " " + String.valueOf(historyResult));
+                    break;
+                case '*':
+                    operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + 'x' + " " + String.valueOf(secondOperand) + " = " + " " + String.valueOf(historyResult));
+                    break;
+                default:
+                    operandDisplayLabel.setText(String.valueOf(firstOperand) + " " + operator + " " + String.valueOf(secondOperand) + " = " + " " + String.valueOf(historyResult));
+            }
+
+            operandsInput.setText(String.valueOf(secondOperand));
         });
 
         historyBox.getChildren().add(memoryLabel);
@@ -129,12 +145,12 @@ public class MainController {
 
     @FXML
     private void clearHistoryOnClicked() {
-        historyBox.getChildren().removeAll();
+        historyBox.getChildren().clear();
     }
 
     @FXML
     private void clearOnClicked() {
-        operandsInput.appendText("");
+        operandsInput.setText("");
     }
 
     @FXML
@@ -142,7 +158,8 @@ public class MainController {
         firstOperand = 0;
         operator = '0';
         secondOperand = 0;
-        operandsInput.appendText("");
+        operandDisplayLabel.setText("0");
+        operandsInput.setText("");
     }
 
     @FXML
