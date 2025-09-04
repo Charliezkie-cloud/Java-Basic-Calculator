@@ -1,5 +1,5 @@
 # Java Basic Calculator
-A basic java calculator made in IntelliJ IDE with JavaFX Library
+A basic java calculator made in IntelliJ IDE with JavaFX Library.
 
 ## [Download Here](https://github.com/Charliezkie-cloud/Java-Basic-Calculator/releases)
 
